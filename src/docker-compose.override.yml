@@ -1,0 +1,31 @@
+
+
+services:
+  catalogdb:
+    container_name: catalogdb
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: CatalogDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_catalog:/var/lib/postgresql/data
+
+  catalogapi:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_HTTPS_PORTS=8081
+      - ConnectionStrings__CatalogDbConnection=Server=catalogdb;Database=CatalogDb;Username=postgres;Password=postgres;Include Error Detail=true
+      - MediatR__LicenseKey=eyJhbGciOiJSUzI1NiIsImtpZCI6Ikx1Y2t5UGVubnlTb2Z0d2FyZUxpY2Vuc2VLZXkvYmJiMTNhY2I1OTkwNGQ4OWI0Y2IxYzg1ZjA4OGNjZjkiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2x1Y2t5cGVubnlzb2Z0d2FyZS5jb20iLCJhdWQiOiJMdWNreVBlbm55U29mdHdhcmUiLCJleHAiOiIxNzkyODAwMDAwIiwiaWF0IjoiMTc2MTMwMzMxOSIsImFjY291bnRfaWQiOiIwMTlhMTVkYjg2OWU3M2JiOWFkMzUxZjkxZWUyMmE1NyIsImN1c3RvbWVyX2lkIjoiY3RtXzAxazhheHFtc3hkODQzOXJzeWg3Z3k0Y2djIiwic3ViX2lkIjoiLSIsImVkaXRpb24iOiIwIiwidHlwZSI6IjIifQ.ISRvPyWklnoGxEgyELyfXdE78MH4fvo9bYEKHIQsmADL6T01syh5NmCs2138xxkKhyHhd5Tc48IMx7QgOxU0nXXxTRg5bO1rrfutZ4IP_fXsR2rekaKQCuk6dIj9NB9QIVXoT_n4-NFMCkyG3Fp22eVfjt8k3xqQaCtpqmJYwwm7Uz5Qo6IGp5gR35uDVte6yzPOw1zA-TJZIaVB7Y4ZaWkS6HZwzxp2mL2X-Ff2iOxBFhxG1RjfrdbTmcbawc70wQLJ9Z3iqmPfOIz69eyJh81CeMbUqDh6QVPOBMmSNIIugzvho9o3hVwswv0Dm59fhUWvtU65RaKOI7nZjYeAKg
+    depends_on:
+      - catalogdb
+    ports:
+      - "6000:8080"
+      - "6060:8081"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
